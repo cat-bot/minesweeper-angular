@@ -1,0 +1,30 @@
+// colours
+$light-gray: #fcf9f9;
+$grid-border: #a2a2a2;
+
+$hidden-cell-background: #cbcbcb;
+$clear-cell-background: rgb(235, 235, 235);
+$mine-cell-background: red;
+
+$count-cell-one-foreground: blue;
+$count-cell-two-foreground: green;
+$count-cell-three-foreground: red;
+$count-cell-four-foreground: darkblue;
+$count-cell-five-foreground: purple;
+
+$app-theme-colour: #2c3361;
+$app-theme-accent-colour-light: lighten($app-theme-colour, 60%);
+$app-theme-accent-colour-semilight: lighten($app-theme-colour, 40%);
+$app-theme-accent-colour-superlight: lighten($app-theme-colour, 70%);
+
+$body-colour: #f2f2f2;
+
+// sizes
+$cell-size: 24px;
+$small-cell-size: 24px;
+$large-cell-size: 36px;
+
+$max-outer-col-width: 850px;
+
+// fonts
+$font-stack:    Helvetica, sans-serif;

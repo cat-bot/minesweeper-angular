@@ -1,0 +1,61 @@
+@import "../../styles/variables";
+
+.bd-navbar {
+    
+    background: linear-gradient(50deg, #0008 70%, #fff4 40%);
+    background-color: $app-theme-colour;
+
+    nav {
+        max-width: $max-outer-col-width;
+
+        #login-ui-container {
+            background-color: $app-theme-accent-colour-light;
+            height: 45px;
+            width: 45px;
+    
+            -moz-transition: all .1s ease-in;
+            -o-transition: all .1s ease-in;
+            -webkit-transition: all .1s ease-in; 
+            transition: all .1s ease-in;
+    
+            &:hover {
+                background-color:$app-theme-accent-colour-semilight;
+                color:$app-theme-accent-colour-light;
+            }
+    
+            #login-profile {
+                height:100%;   
+    
+                img {
+                    height: 90%;
+
+                    &.opacity-animation {
+                        -webkit-animation-duration: 0.5s;
+                        animation-duration: 0.5s;
+                        -webkit-animation-fill-mode: both;
+                        animation-fill-mode: both;
+                    }
+
+                    @-webkit-keyframes fadeIn {
+                        0% {opacity: 0;}
+                        100% {opacity: 1;}
+                     }
+                     
+                     @keyframes fadeIn {
+                        0% {opacity: 0;}
+                        100% {opacity: 1;}
+                     }
+
+                     &.fadeIn {
+                        -webkit-animation-name: fadeIn;
+                        animation-name: fadeIn;
+                    }
+                }
+            }
+    
+            #login-prompt {
+                height:100%;
+            }
+        }
+    }
+}
