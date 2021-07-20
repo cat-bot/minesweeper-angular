@@ -4,4 +4,4 @@ Stuff goes here...
 
 ## App
 
-Check the [readme here](minesweeper-app/readme.md)
+Check the [readme here](minesweeper-app/README.md)
