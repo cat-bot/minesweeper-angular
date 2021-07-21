@@ -13,7 +13,7 @@
                 </svg>
             </div> 
             <div *ngIf='authService.userData | async' id='login-profile' (click)='onSignOut()' class='navbar-nav d-flex justify-content-center align-items-center'>
-              <img src='{{(authService.userData | async)?.photoURL}}' alt='sign out {{(authService.userData | async)?.displayName}}' title='sign out {{(authService.userData | async)?.displayName}}' [class.fadeIn]='authService.userData | async' class='rounded-circle opacity-animation' /> 
+              <img src='{{(authService.userData | async)?.photoURL}}' title='sign out {{(authService.userData | async)?.displayName}}' [class.fadeIn]='authService.userData | async' class='rounded-circle opacity-animation' /> 
             </div>
         </div>
     </nav>

@@ -14,11 +14,13 @@ import { NavbarComponent } from './navbar/navbar.component';
 
 // environment
 import { environment } from '../environments/environment';
+import { StatsComponent } from './stats/stats.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    StatsComponent
   ],
   imports: [
     BrowserModule,
