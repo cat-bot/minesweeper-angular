@@ -5,10 +5,18 @@
     background: linear-gradient(50deg, #0008 70%, #fff4 40%);
     background-color: $app-theme-colour;
 
+    .ms-nav-link {
+
+        &:hover {
+            color: $theme-off-white !important;
+        }
+    }
+
     nav {
         max-width: $max-outer-col-width;
 
-        #login-ui-container {
+
+        .user-ui-container {
             background-color: $app-theme-accent-colour-light;
             height: 45px;
             width: 45px;
