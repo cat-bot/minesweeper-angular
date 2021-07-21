@@ -16,7 +16,6 @@ export class StatisticsService {
   getScores(startAt: number, n: number) : Promise<undefined | StatisticsDataPage> {
     // fetch 1 more than n, to test for paging
     let k = n + 1;
-
     let db = this.angularFireStore.collection(environment.scores_collection);
 
     let result = db.ref

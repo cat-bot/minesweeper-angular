@@ -12,7 +12,7 @@
                 </thead>
                 <tbody class='opacity-animation' *ngIf='statistics' [class.fadeIn]='statistics'>
                     <tr *ngFor='let record of statistics?.data'>
-                        <td>?</td>
+                        <td>{{record.uid}}</td>
                         <td>{{record.name}}</td>
                         <td>{{record.gametype}}</td>
                         <td>{{record.time}}</td>

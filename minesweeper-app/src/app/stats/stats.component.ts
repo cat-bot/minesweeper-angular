@@ -28,10 +28,18 @@ export class StatsComponent implements OnInit {
       if (data === undefined)
         return;
 
-      this.statistics = data;
-
       // record where we are at for next paging
       this.pageStart = data.startAt;
+
+      // SOME BS HACK FOR NOW
+      // cosmetic index for display
+      let startIndex = data.startAt;
+      data.data.forEach((value) => {
+        startIndex++;
+        value.uid = "" + startIndex;
+      }); 
+
+      this.statistics = data;     
     });
   }
 
