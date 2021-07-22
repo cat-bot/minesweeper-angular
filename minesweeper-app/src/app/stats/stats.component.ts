@@ -15,7 +15,7 @@ export class StatsComponent implements OnInit {
 
   constructor(public statisticsService: StatisticsService) { 
     this.pageStart = 0;
-    this.pageSize = 4;
+    this.pageSize = 10;
   }
 
   ngOnInit(): void {

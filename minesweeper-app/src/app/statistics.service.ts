@@ -44,7 +44,7 @@ export class StatisticsService {
   
           return new StatisticsDataPage(results, startAt, hasPrev, hasPrev ? startAt - n : undefined, hasNext, hasNext ? startAt + n : undefined);
       },
-      (error) => {
+      () => {
         console.log("failed to get scores");
         return undefined;
       });

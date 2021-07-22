@@ -1,0 +1,10 @@
+<table *ngIf='generatedGrid' class='{{generatedGrid?.gridSize?.label}}'>
+    <tbody>
+        <tr *ngFor='let row of generatedGrid.grid'>
+            <td app-minesweeper-game-cell class='cell' 
+                *ngFor='let cell of row' 
+                [mineCell]='cell' 
+                [difficultyClass]='generatedGrid.gridSize.label'></td>
+        </tr>
+    </tbody>
+</table>

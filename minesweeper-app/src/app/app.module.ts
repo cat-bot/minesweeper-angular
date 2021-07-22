@@ -15,12 +15,18 @@ import { NavbarComponent } from './navbar/navbar.component';
 // environment
 import { environment } from '../environments/environment';
 import { StatsComponent } from './stats/stats.component';
+import { MinesweeperComponent } from './minesweeper/minesweeper.component';
+import { MinesweeperGameComponent } from './minesweeper-game/minesweeper-game.component';
+import { MinesweeperGameCellComponent } from './minesweeper-game-cell/minesweeper-game-cell.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    StatsComponent
+    StatsComponent,
+    MinesweeperComponent,
+    MinesweeperGameComponent,
+    MinesweeperGameCellComponent
   ],
   imports: [
     BrowserModule,
