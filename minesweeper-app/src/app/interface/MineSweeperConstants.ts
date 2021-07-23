@@ -6,9 +6,10 @@ export const MINESWEEPER_GRID_SIZES: MineSweeperGridSize[] = [
     { width: 16, height: 26, mines: 86, label: "expert"}
 ];
     
-export const MINESWEEPER_GAME_COMPLETION_STATES = {
-    started: 0,
-    completed: 1,
-    failed: 2
+export const enum MINESWEEPER_GAME_COMPLETION_STATES {
+    new,
+    started,
+    completed,
+    failed
 };
 

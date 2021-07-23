@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { MineSweeperCell } from './interface/MineSweeperCell';
 import { MineSweeperGeneratedGrid } from './interface/MineSweeperGeneratedGrid';
 import { MineSweeperGridSize } from './interface/MineSweeperGridSize';
@@ -20,7 +21,7 @@ export class MinesService {
       let row: MineSweeperCell[] = [];
 
       for(let j = 0; j < gridSize.width; j++) {
-          let newCell = new MineSweeperCell();
+          let newCell = new MineSweeperCell(i, j);
           row.push(newCell);               
       }
 
@@ -37,7 +38,7 @@ export class MinesService {
 
         let mineCell = cellGrid[rowIndex][colIndex];
 
-        mineCell.isMine = true;
+        mineCell.setIsMine();
         mineCells.push(mineCell);               
     }
 
@@ -53,15 +54,13 @@ export class MinesService {
           let adjacentCell = cellGrid[otherCoords[j].y][otherCoords[j].x]
 
           if (!adjacentCell.isMine)
-              adjacentCell.adjacentMineCount++;;
+              adjacentCell.incrementAdjacentMineCount();
       }
     }
 
-    let ret = new MineSweeperGeneratedGrid();
+    let ret = new MineSweeperGeneratedGrid(cellGrid, mineCells, gridSize);
 
-    ret.grid = cellGrid;
-    ret.mines = mineCells;
-    ret.gridSize = gridSize;
+    this.logCells(ret);
 
     return ret;
   }
@@ -163,5 +162,20 @@ export class MinesService {
       }
 
       return nums;
+  }
+
+  private logCells(cellGrid: MineSweeperGeneratedGrid) {
+    if (!environment.production) {
+      console.log(`cell grid:`);
+      for (let k = 0; k < cellGrid.grid.length; k++) {
+        let row = cellGrid.grid[k];
+        let rowString = '';
+        for (let j = 0; j < row.length; j++) {
+            let cell = row[j];
+            rowString += `${cell.adjacentMineCount} `;
+        }
+        console.log(rowString);
+      }
+    }
   }
 }

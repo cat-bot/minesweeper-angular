@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { MineSweeperGeneratedGrid } from '../interface/MineSweeperGeneratedGrid';
-import { MinesService } from '../mines.service';
+import { MineSweeperCell } from '../interface/MineSweeperCell';
+import { MineSweeperGameState } from '../interface/MineSweeperGameState';
 
 @Component({
   selector: 'app-minesweeper-game',
@@ -9,16 +9,26 @@ import { MinesService } from '../mines.service';
 })
 export class MinesweeperGameComponent implements OnInit {
 
-  // model binding
-  @Input() generatedGrid: MineSweeperGeneratedGrid | undefined;
+  @Input() gameState: MineSweeperGameState | undefined;
 
-  constructor(public mineService: MinesService) {
-  }
+  constructor() {}
 
   ngOnInit(): void {
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
+  onCellSelect(event: any, cell: MineSweeperCell): void {
+    if (event.which == 1)
+    {
+      this.gameState?.trySelectCell(cell);
+    }
   }
+
+  onContextMenu(event: any, cell: MineSweeperCell): boolean {
+    if (event.which == 3) {
+      this.gameState?.tryMarkCell(cell);
+    }
+
+    // suppress right click action
+    return false;
+  }   
 }

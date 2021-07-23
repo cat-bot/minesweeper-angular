@@ -8,14 +8,16 @@
         <div class='col-12 col-sm-8 p-1 p-sm-3 g-sm-2'>
             <input type="button" value='new game' class='btn btn-outline-primary' (click)="onNewGame()" />&nbsp;     
             <div class='btn-group'>
-                <input type="button" value='auto win' class='btn btn-outline-secondary' (click)='onAutoWin()'/>
-                <input type="button" value='auto lose' class='btn btn-outline-secondary' (click)='onAutoLose()'/>
+                <input type="button" value='auto win' class='btn btn-outline-secondary' 
+                    [class.disabled]='!mineGameState' (click)='onAutoWin()'/>
+                <input type="button" value='auto lose' class='btn btn-outline-secondary' 
+                    [class.disabled]='!mineGameState' (click)='onAutoLose()'/>
             </div>
         </div>
     </div>
     <div class='grid-container row'>
         <div class='grid col-12 user-select-none py-4 px-0'>     
-            <app-minesweeper-game *ngIf='mineGrid' [generatedGrid]='mineGrid'></app-minesweeper-game>
+            <app-minesweeper-game *ngIf='mineGameState' [gameState]='mineGameState'></app-minesweeper-game>
         </div>
     </div>
 </div>

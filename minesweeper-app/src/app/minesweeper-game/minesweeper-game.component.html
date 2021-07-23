@@ -1,10 +1,12 @@
-<table *ngIf='generatedGrid' class='{{generatedGrid?.gridSize?.label}}'>
+<table *ngIf='gameState' class='{{gameState?.gridSize?.label}}'>
     <tbody>
-        <tr *ngFor='let row of generatedGrid.grid'>
+        <tr *ngFor='let row of gameState.grid.grid'>
             <td app-minesweeper-game-cell class='cell' 
-                *ngFor='let cell of row' 
+                *ngFor='let cell of row'
+                (click)='onCellSelect($event, cell)' 
+                (contextmenu)='onContextMenu($event, cell);'
                 [mineCell]='cell' 
-                [difficultyClass]='generatedGrid.gridSize.label'></td>
+                [difficultyClass]='gameState?.gridSize?.label'></td>
         </tr>
     </tbody>
 </table>
