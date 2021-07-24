@@ -1,0 +1,42 @@
+@import "../../variables";
+
+table {
+    border: 2px solid $grid-border;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center;
+    background-color: $clear-cell-background; 
+
+    &.beginner {
+        .cell {
+            height: $large-cell-size;
+            width: $large-cell-size; 
+            min-width: $large-cell-size;
+            min-height: $large-cell-size;
+        }
+    }
+
+    &.intermediate {
+        .cell {
+            height: $cell-size;
+            width: $cell-size; 
+            min-width: $cell-size;
+            min-height: $cell-size;
+        }
+    }
+
+    &.expert {
+        .cell {
+            height: $small-cell-size;
+            width: $small-cell-size; 
+            min-width: $small-cell-size;
+            min-height: $small-cell-size;
+        }
+    }
+
+    // general  
+    .cell {             
+        border: 1px solid $grid-border; 
+        padding: 0;
+    }
+}

@@ -1,0 +1,89 @@
+@import "../../variables";
+
+.cell-body {
+    height: 100%;
+    width: 100%;
+    border: 1px solid white;
+
+    &.hidden {
+        background-color: $hidden-cell-background;     
+        border: 1px solid;
+        border-top-color: lighten($hidden-cell-background, 30%);
+        border-left-color: lighten($hidden-cell-background, 30%);
+        border-right-color: darken($hidden-cell-background, 30%);
+        border-bottom-color: darken($hidden-cell-background, 30%);
+
+        :hover {
+            background-color: darken($clear-cell-background, 5%);   
+        }
+
+        &.marked {
+            .cell-inner:before {
+                font-weight: bold;
+                content: "!";
+            }
+        }
+    }
+    
+    &.mine {
+        background-color: $clear-cell-background;
+
+        @keyframes redpulse {
+            0% {background-color: $clear-cell-background;}
+            100% {background-color: $mine-cell-background;}
+        }
+        
+        &.triggered {
+            background-color: $mine-cell-background;  
+            animation-name: redpulse;
+            animation-duration: 0.15s;
+        }
+    }
+
+    &.open-1 {
+        color: $count-cell-one-foreground;
+    }
+
+    &.open-2 {
+        color: $count-cell-two-foreground;
+    }
+
+    &.open-3 {
+        color: $count-cell-three-foreground;
+    }
+
+    &.open-4 {
+        color: $count-cell-four-foreground;
+    }
+
+    &.open-5 {
+        color: $count-cell-five-foreground;
+    }
+
+    &.open-6, &.open-7, &.open-8 {
+        color: black;
+    }
+     
+    .cell-inner {
+        height: 100%;
+        width: 100%;
+    }
+
+    &.beginner {
+        .cell-inner {
+            padding-top:3px;
+        }
+    }
+
+    &.intermediate {
+        .cell-inner {
+            font-size:0.8em;
+        }
+    }
+
+    &.expert {
+        .cell-inner {
+            font-size:0.7em;
+        }
+    }
+}
