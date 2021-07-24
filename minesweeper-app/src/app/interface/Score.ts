@@ -4,9 +4,9 @@ export class Score {
     public gametype: string;
     public name: string;
     public uid: string;
-    public time: string;
+    public time: number;
 
-    constructor(gametype: string, name: string, uid: string, time: string) {
+    constructor(gametype: string, name: string, uid: string, time: number) {
         this.game = "minesweeper";
         this.gamealias = "&#625;";
         this.gametype = gametype;

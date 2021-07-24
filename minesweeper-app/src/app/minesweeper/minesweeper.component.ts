@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MINESWEEPER_GRID_SIZES} from '../interface/MineSweeperConstants';
-import { MineSweeperGeneratedGrid } from '../interface/MineSweeperGeneratedGrid';
 import { MineSweeperGridSize } from '../interface/MineSweeperGridSize';
 import { MinesService } from '../mines.service';
 import { environment } from 'src/environments/environment';
 import { MineSweeperGameState } from '../interface/MineSweeperGameState';
+import { StatisticsService } from '../statistics.service';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -17,22 +18,36 @@ export class MinesweeperComponent implements OnInit {
   selectedGridSize: MineSweeperGridSize = this.availableGridSizes[0];     // default to beginner
   mineGameState: MineSweeperGameState | undefined;
 
-  constructor(private mineService: MinesService) { }
+  constructor(private mineService: MinesService, private statsService: StatisticsService, private authService: AuthenticationService) { }
 
   ngOnInit(): void {
   }
 
-  onNewGame(): void {   
-    console.log(`start new ${this.selectedGridSize.label} game`);
-    // generate grid and game state
-    this.mineGameState = new MineSweeperGameState(this.selectedGridSize, this.mineService.generateGameCells(this.selectedGridSize));
+  onNewGame(): void {  
+    if (!environment.production) {
+      console.log(`start new ${this.selectedGridSize.label} game`);
+    }
+
+    this.mineGameState = new MineSweeperGameState(
+      this.selectedGridSize, 
+      this.mineService.generateGameCells(this.selectedGridSize),
+      this.statsService,
+      this.authService);
   }
 
   onAutoWin(): void {
-    //console.log('auto win game');
+    if (!environment.production) {
+      console.log('auto win game');
+    }
+
+    this.mineGameState?.triggerAutoWin();
   }
 
   onAutoLose(): void {
-    //console.log('auto lose game');
+    if (!environment.production) {
+      console.log('auto lose game');
+    }
+
+    this.mineGameState?.triggerAutoLose();
   }
 }

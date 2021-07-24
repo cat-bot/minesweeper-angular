@@ -13,7 +13,5 @@ export class MinesweeperGameCellComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 }

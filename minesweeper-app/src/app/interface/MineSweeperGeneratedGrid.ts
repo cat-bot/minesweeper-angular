@@ -1,5 +1,4 @@
 import { MineSweeperCell } from "./MineSweeperCell";
-import { MINESWEEPER_GRID_SIZES } from "./MineSweeperConstants";
 import { MineSweeperGridSize } from "./MineSweeperGridSize";
 
 export class MineSweeperGeneratedGrid {
@@ -7,8 +6,6 @@ export class MineSweeperGeneratedGrid {
         grid: (MineSweeperCell[])[],  
         mines: MineSweeperCell[], 
         gridSize: MineSweeperGridSize){
-
-        // just defaults ...
         this.grid = grid;
         this.mines = mines;
         this.gridSize = gridSize;

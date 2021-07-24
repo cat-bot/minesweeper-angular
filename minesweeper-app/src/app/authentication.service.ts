@@ -21,15 +21,17 @@ export class AuthenticationService {
 
     this.angularFireAuth
       .signInWithPopup(googleLoginProvider)
-      .then(res => {
-        console.log('Successfully signed in!');
+      .then(result => {
       })
       .catch(err => {
-        console.log('Something is wrong:',err.message);
       });
   }
 
   triggerLogout(): void {
     this.angularFireAuth.signOut();
+  }
+
+  getCurrentUser(): firebase.User | null {
+    return firebase.auth().currentUser;
   }
 }

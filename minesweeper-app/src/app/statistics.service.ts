@@ -45,7 +45,6 @@ export class StatisticsService {
           return new StatisticsDataPage(results, startAt, hasPrev, hasPrev ? startAt - n : undefined, hasNext, hasNext ? startAt + n : undefined);
       },
       () => {
-        console.log("failed to get scores");
         return undefined;
       });
 
@@ -57,7 +56,6 @@ export class StatisticsService {
       .collection(environment.scores_collection)
       .add(new ScoreConverter().toFirestore(score))
       .then(() => {
-        console.log("score successfully written!");
       });
   }
 }

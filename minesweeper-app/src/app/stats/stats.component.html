@@ -6,7 +6,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">user</th>
-                        <th scope="col">difficulty</th>
+                        <th scope="col">game</th>
                         <th scope="col">time (s)</th>
                     </tr>
                 </thead>
@@ -14,8 +14,8 @@
                     <tr *ngFor='let record of statistics?.data'>
                         <td>{{record.uid}}</td>
                         <td>{{record.name}}</td>
-                        <td>{{record.gametype}}</td>
-                        <td>{{record.time}}</td>
+                        <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
+                        <td>{{record.time / 1000}}</td>
                     </tr>
                 </tbody>
             </table>
