@@ -79,11 +79,25 @@
         .cell-inner {
             font-size:0.8em;
         }
+
+        @media (min-width: 768px) {
+            .cell-inner {
+                padding-top:3px;
+                font-size:1em;
+            }
+        }
     }
 
     &.expert {
         .cell-inner {
-            font-size:0.7em;
+            font-size:0.8em;
+        }
+
+        @media (min-width: 768px) {
+            .cell-inner {
+                padding-top:3px;
+                font-size:1em;
+            }
         }
     }
 }

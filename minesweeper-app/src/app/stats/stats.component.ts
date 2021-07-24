@@ -16,7 +16,7 @@ export class StatsComponent implements OnInit {
   currentRecordIndex: number;
 
   constructor(public statisticsService: StatisticsService) { 
-    this.pageSize = 3;
+    this.pageSize = 10;
     this.currentRecordIndex = 0;
   }
 

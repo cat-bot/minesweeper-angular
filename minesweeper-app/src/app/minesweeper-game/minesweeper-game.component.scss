@@ -23,6 +23,16 @@ table {
             min-width: $small-cell-size;
             min-height: $small-cell-size;
         }
+
+        // scale bigger for tablets and above
+        @media (min-width: 768px) {
+            .cell {
+                height: $large-cell-size;
+                width: $large-cell-size; 
+                min-width: $large-cell-size;
+                min-height: $large-cell-size;
+            }    
+        }
     }
 
     &.expert {
@@ -31,6 +41,16 @@ table {
             width: $small-cell-size; 
             min-width: $small-cell-size;
             min-height: $small-cell-size;
+        }
+
+        // scale bigger for tablets and above
+        @media (min-width: 768px) {
+            .cell {
+                height: $large-cell-size;
+                width: $large-cell-size; 
+                min-width: $large-cell-size;
+                min-height: $large-cell-size;
+            }    
         }
     }
 
