@@ -6,6 +6,13 @@ export class Score {
     public uid: string;
     public time: number;
 
+    // not part of the stored data. 
+    // this is the firebase document id
+    public docid: string | undefined;
+
+    // for paging
+    public pagerankid: number | undefined;
+
     constructor(gametype: string, name: string, uid: string, time: number) {
         this.game = "minesweeper";
         this.gamealias = "&#625;";
@@ -18,6 +25,7 @@ export class Score {
 
 export class ScoreConverter {
     toFirestore(score: Score)  {
+        // note - do not store the doc id...
         return {
             game: score.game,
             gamealias: score.gamealias,
@@ -30,6 +38,9 @@ export class ScoreConverter {
 
     fromFirestore(snapshot: firebase.default.firestore.QueryDocumentSnapshot, options?: firebase.default.firestore.SnapshotOptions){
         const data = snapshot.data(options);
-        return new Score(data.gametype, data.name, data.uid, data.time);
+        let score = new Score(data.gametype, data.name, data.uid, data.time)
+        score.docid = snapshot.id;
+
+        return score;
     }
 }

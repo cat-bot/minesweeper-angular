@@ -9,49 +9,66 @@ import { StatisticsService } from '../statistics.service';
 })
 export class StatsComponent implements OnInit {
 
-  pageStart: number;
   pageSize: number;
   statistics: StatisticsDataPage | undefined;
 
+  // for tracking a cosmetic index per record
+  currentRecordIndex: number;
+
   constructor(public statisticsService: StatisticsService) { 
-    this.pageStart = 0;
-    this.pageSize = 10;
+    this.pageSize = 3;
+    this.currentRecordIndex = 0;
   }
 
   ngOnInit(): void {
-    // start at index 0...
-    this.getStats(this.pageStart, this.pageSize);
+    // initialise at time = 0...
+    this.getStats(0);
   }
 
-  getStats(startAt: number, n: number): void {
-    this.statisticsService.getScores(startAt, n).then((data) => {
-      if (data === undefined)
-        return;
+  getStats(startAt: number): void {
+    this.statisticsService.getPagedStats(startAt, this.pageSize)
+      .then((data) => {
+        // cosmetic index for display
+        data.data.forEach((value) => {
+          this.currentRecordIndex++;
+          value.pagerankid = this.currentRecordIndex;
+        }); 
 
-      // record where we are at for next paging
-      this.pageStart = data.startAt;
-
-      // SOME BS HACK FOR NOW
-      // cosmetic index for display
-      let startIndex = data.startAt;
-      data.data.forEach((value) => {
-        startIndex++;
-        value.uid = "" + startIndex;
-      }); 
-
-      this.statistics = data;     
-    });
+        this.statistics = data;     
+      });
   }
 
   getNext(): void {
     if (this.statistics?.hasNext) {
-      this.getStats(this.pageStart + this.pageSize, this.pageSize);
+      this.statisticsService.getNextPage(this.statistics)
+        .then((data) => {
+          // cosmetic index for display
+          data.data.forEach((value) => {
+            this.currentRecordIndex++;
+            value.pagerankid = this.currentRecordIndex;
+          }); 
+
+          this.statistics = data;     
+        });
     }
   }
 
   getPrev(): void {
     if (this.statistics?.hasPrev) {
-      this.getStats(this.pageStart - this.pageSize, this.pageSize);
+      // first reset index for the current displayed data size
+      this.currentRecordIndex = this.currentRecordIndex - this.statistics.data.length;
+
+      this.statisticsService.getPreviousPage(this.statistics)
+        .then((data) => {
+          // further reset index by the page size to count forward
+          this.currentRecordIndex = this.currentRecordIndex - data.data.length;
+          data.data.forEach((value) => {
+            this.currentRecordIndex++;
+            value.pagerankid = this.currentRecordIndex;
+          }); 
+
+          this.statistics = data;     
+        });
     }
   }
 }

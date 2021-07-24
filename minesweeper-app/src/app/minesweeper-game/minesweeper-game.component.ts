@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { MineSweeperCell } from '../interface/MineSweeperCell';
+import { MINESWEEPER_GAME_COMPLETION_STATES } from '../interface/MineSweeperConstants';
 import { MineSweeperGameState } from '../interface/MineSweeperGameState';
 
 @Component({
@@ -20,6 +21,11 @@ export class MinesweeperGameComponent implements OnInit {
     if (event.which == 1)
     {
       this.gameState?.trySelectCell(cell);
+
+      // check the game state afterwards
+      if (this.gameState?.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.completed) {
+        console.log('you won');
+      }
     }
   }
 

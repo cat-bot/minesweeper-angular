@@ -11,11 +11,13 @@
                     </tr>
                 </thead>
                 <tbody class='opacity-animation' *ngIf='statistics' [class.fadeIn]='statistics'>
-                    <tr *ngFor='let record of statistics?.data'>
-                        <td>{{record.uid}}</td>
+                    <tr *ngFor='let record of statistics?.data' [attr.doc-id]='record.docid' [attr.user-uid]='record.uid'>
+                        <td>
+                            <a href="#{{record.docid}}"></a>{{record.pagerankid}}
+                        </td>
                         <td>{{record.name}}</td>
                         <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
-                        <td>{{record.time / 1000}}</td>
+                        <td>{{(record.time / 1000).toFixed(1)}}</td>
                     </tr>
                 </tbody>
             </table>

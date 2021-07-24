@@ -18,10 +18,10 @@ table {
 
     &.intermediate {
         .cell {
-            height: $cell-size;
-            width: $cell-size; 
-            min-width: $cell-size;
-            min-height: $cell-size;
+            height: $small-cell-size;
+            width: $small-cell-size; 
+            min-width: $small-cell-size;
+            min-height: $small-cell-size;
         }
     }
 

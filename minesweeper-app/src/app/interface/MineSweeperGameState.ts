@@ -189,8 +189,9 @@ export class MineSweeperGameState {
                     user.uid, 
                     this.gameElapsedTime ? this.gameElapsedTime : NaN);
 
-                this.statsService.addScore(score);
-                this.logToConsole('score submitted');
+                this.statsService.addScore(score).then((doc) => {
+                    this.logToConsole(`document written, id: ${doc.id}`);
+                });
             }
         }
     }
