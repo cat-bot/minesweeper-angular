@@ -13,6 +13,8 @@ $count-cell-three-foreground: red;
 $count-cell-four-foreground: darkblue;
 $count-cell-five-foreground: purple;
 
+$winner-badge-colour: rgb(28, 117, 28);
+
 $app-theme-colour: #2c3361;
 $app-theme-accent-colour-light: lighten($app-theme-colour, 60%);
 $app-theme-accent-colour-semilight: lighten($app-theme-colour, 40%);
@@ -28,3 +30,4 @@ $max-outer-col-width: 850px;
 
 // fonts
 $font-stack: Helvetica, sans-serif;
+$mono-fonts: Monospace;

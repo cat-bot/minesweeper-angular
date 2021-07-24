@@ -17,8 +17,9 @@ export class MineSweeperGeneratedGrid {
 
     public revealAllMines () {
         for(let i = 0; i < this.mines.length; i++) {
-            if (!this.mines[i].isRevealed)
+            if (!this.mines[i].isRevealed) {
                 this.mines[i].reveal();
+            }
         }
     }
 

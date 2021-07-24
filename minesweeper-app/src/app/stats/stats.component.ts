@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication.service';
 import { StatisticsDataPage } from '../interface/StatisticsDataPage';
 import { StatisticsService } from '../statistics.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-stats',
@@ -15,7 +18,14 @@ export class StatsComponent implements OnInit {
   // for tracking a cosmetic index per record
   currentRecordIndex: number;
 
-  constructor(public statisticsService: StatisticsService) { 
+  // for scrolling to..
+  scrollToId: string | undefined;
+
+  constructor(
+    private route: ActivatedRoute, 
+    private scroller: ViewportScroller,
+    public statisticsService: StatisticsService, 
+    public authService: AuthenticationService) { 
     this.pageSize = 10;
     this.currentRecordIndex = 0;
   }
@@ -23,6 +33,15 @@ export class StatsComponent implements OnInit {
   ngOnInit(): void {
     // initialise at time = 0...
     this.getStats(0);
+  }
+
+  ngAfterViewChecked() {
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.scroller.scrollToAnchor(fragment);
+        this.scrollToId = fragment;
+      }
+    });
   }
 
   getStats(startAt: number): void {

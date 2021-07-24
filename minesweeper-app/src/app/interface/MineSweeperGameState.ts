@@ -26,7 +26,9 @@ export class MineSweeperGameState {
     // win condition tracking
     totalCellCountRequiredToWin: number;
     cellsCleared: number;
+    cellsRemaining: number;
     wonByAutoWin: boolean;
+    storedWinRecordId: string | undefined;
 
     constructor(
         gridSize: MineSweeperGridSize, 
@@ -49,6 +51,9 @@ export class MineSweeperGameState {
         // how many cell reveals to win?
         this.totalCellCountRequiredToWin =  gridSize.width*gridSize.height - gridSize.mines;
         this.cellsCleared = 0;
+
+        // how many remain to mark
+        this.cellsRemaining = gridSize.mines;
     };
 
     // PUBLIC
@@ -57,9 +62,21 @@ export class MineSweeperGameState {
         if (this.gameIsEnabled) {   
             // make sure timer is started     
             this.ensureGameStarted(); 
-
             this.logToConsole(`mark cell ${cell.toString()}`);
+
+            // check cell state before and after
+            let wasMarked = cell.isMarked;
             cell.tryMarkCell();
+            let isNowMarked = cell.isMarked;
+
+            if (wasMarked == isNowMarked) {
+                // no state change
+                return;
+            }
+
+            // there was a state change, so increment or decrement accordingly
+            let newCellsRemaining = this.cellsRemaining + (isNowMarked ? - 1 : 1);            
+            this.cellsRemaining = newCellsRemaining;
         }
         else {
             this.logToConsole(`game stopped: ${this.gameCompletionState}`);
@@ -71,6 +88,11 @@ export class MineSweeperGameState {
             // make sure timer is started
             this.ensureGameStarted();
             this.logToConsole(`select cell ${cell.toString()}`);
+
+            if (cell.isMarked) {
+                // do nothing - the original minesweeper wouldnt let you select marked cells
+                return;
+            }
             
             // first, check if already revealed
             if (cell.isRevealed) {
@@ -190,7 +212,7 @@ export class MineSweeperGameState {
                     this.gameElapsedTime ? this.gameElapsedTime : NaN);
 
                 this.statsService.addScore(score).then((doc) => {
-                    this.logToConsole(`document written, id: ${doc.id}`);
+                    this.storedWinRecordId = doc.id;
                 });
             }
         }

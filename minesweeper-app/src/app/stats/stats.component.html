@@ -11,11 +11,11 @@
                     </tr>
                 </thead>
                 <tbody class='opacity-animation' *ngIf='statistics' [class.fadeIn]='statistics'>
-                    <tr *ngFor='let record of statistics?.data' [attr.doc-id]='record.docid' [attr.user-uid]='record.uid'>
+                    <tr *ngFor='let record of statistics?.data' id='{{record.docid}}' [class.highlight]='record.docid == scrollToId'>
                         <td>
-                            <a href="#{{record.docid}}"></a>{{record.pagerankid}}
+                            {{record.pagerankid}}
                         </td>
-                        <td>{{record.name}}</td>
+                        <td [class.is-current-user]='(authService.userData | async)?.uid == record.uid'>{{record.name}} <span *ngIf='record.pagerankid == 1' class='winner-badge'>★</span></td>
                         <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
                         <td>{{(record.time / 1000).toFixed(1)}}</td>
                     </tr>
@@ -26,9 +26,9 @@
             <nav aria-label="...">
                 <ul class="pagination pagination">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
-                        <a class="page-link" routerLink="/stats">&lt; prev</a></li>
+                        <a class="page-link">&lt; prev</a></li>
                     <li [class.disabled]='!statistics || !(statistics?.hasNext)' class="page-item" title="show me the next scores" (click)='getNext()'>
-                        <a class="page-link" routerLink="/stats">next &gt;</a></li>
+                        <a class="page-link">next &gt;</a></li>
                 </ul>
             </nav>
         </div>

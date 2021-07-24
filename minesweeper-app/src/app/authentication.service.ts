@@ -21,10 +21,8 @@ export class AuthenticationService {
 
     this.angularFireAuth
       .signInWithPopup(googleLoginProvider)
-      .then(result => {
-      })
-      .catch(err => {
-      });
+      .then(result => { })
+      .catch(err => { });
   }
 
   triggerLogout(): void {

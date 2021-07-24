@@ -10,3 +10,8 @@
         </tr>
     </tbody>
 </table>
+<div class='game-state-info m-sm-2'>
+    <span *ngIf='gameState?.cellsRemaining'>mines remaining: {{gameState?.cellsRemaining}}</span>
+    <span *ngIf='gameState?.storedWinRecordId'>You won! Check you score 
+        <a routerLink="/stats" fragment='{{gameState?.storedWinRecordId}}'>here</a></span>
+</div>
