@@ -18,9 +18,17 @@
         }
 
         &.marked {
-            .cell-inner:before {
-                font-weight: bold;
+            font-weight: bold;
+
+            .cell-inner:before {         
                 content: "!";
+            }
+
+            &.incorrect {
+                .cell-inner:before {
+                    color: red;
+                    content: "X";
+                }
             }
         }
     }

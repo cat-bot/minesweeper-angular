@@ -9,6 +9,9 @@ export class MineSweeperCell {
     i: number;
     j: number;
 
+    // for ui concerns, only relevant on loss condition
+    cellIncorrectlyMarked: boolean | undefined;
+
     constructor(i: number, j: number) {
         this.adjacentMineCount = 0;
         this.isMine = false;
@@ -26,6 +29,12 @@ export class MineSweeperCell {
     */
     setIsMine() {
         this.isMine = true;  
+    }
+
+    setIsIncorrectlyMarked() {
+        if (!this.isMine && this.isMarked) {
+            this.cellIncorrectlyMarked = true;
+        }
     }
 
     /*
@@ -66,14 +75,17 @@ export class MineSweeperCell {
     }
 
     getCellGlyph(): string {
-        return this.isRevealed ? (this.isMine ? "💣" : (this.adjacentMineCount > 0 ? `${this.adjacentMineCount}` : "")) : "";
+        return this.isRevealed 
+            ? (this.isMine ? "💣" : (this.adjacentMineCount > 0 ? `${this.adjacentMineCount}` : "")) 
+            : "";
     }
 
     getCellClass(): string {
         if (!this.isRevealed) 
         {
-            if (this.isMarked)
-                return "hidden marked";
+            if (this.isMarked) {
+                return this.cellIncorrectlyMarked ? "hidden marked incorrect" : "hidden marked";
+            }
 
             return "hidden";
         }

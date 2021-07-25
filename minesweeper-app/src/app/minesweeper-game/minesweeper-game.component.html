@@ -11,7 +11,12 @@
     </tbody>
 </table>
 <div class='game-state-info m-sm-2'>
-    <span *ngIf='gameState?.cellsRemaining'>mines remaining: {{gameState?.cellsRemaining}}</span>
-    <span *ngIf='gameState?.storedWinRecordId'>You won! Check you score 
-        <a routerLink="/stats" fragment='{{gameState?.storedWinRecordId}}'>here</a></span>
+    <span *ngIf='gameState?.gameCompletionState == NEW || gameState?.gameCompletionState == STARTED'>mines remaining: {{gameState?.cellsRemaining}}</span>
+    <span *ngIf='gameState?.gameCompletionState == COMPLETED'>You won! <span>😎</span> Check you score 
+        <a *ngIf='gameState?.storedWinRecordId' 
+            routerLink="/stats" 
+            fragment='{{gameState?.storedWinRecordId}}'>here</a>
+        <span *ngIf='!(gameState?.storedWinRecordId)'>...</span>
+    </span>
+    <span *ngIf='gameState?.gameCompletionState == FAILED'>Aww, you lost! <span>😮</span> Try again!</span>
 </div>
