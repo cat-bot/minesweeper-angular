@@ -5,6 +5,10 @@
 }
 
 .stats-container {
+    .themed-spinner {
+        color: $app-theme-accent-colour-semilight;
+    }
+
     @-webkit-keyframes fadeIn {
         0% {opacity: 0;}
         100% {opacity: 1;}
