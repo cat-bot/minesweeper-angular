@@ -2,4 +2,13 @@
 
 .app-container {
     max-width: $max-outer-col-width;
+
+    .game-state-controls {
+        .help-control {
+            font-family: $mono-fonts;
+            z-index:1000;
+        }
+    }
 }
+
+

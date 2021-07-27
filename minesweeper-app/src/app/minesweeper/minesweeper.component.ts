@@ -18,7 +18,8 @@ export class MinesweeperComponent implements OnInit {
   selectedGridSize: MineSweeperGridSize = this.availableGridSizes[0];     // default to beginner
   mineGameState: MineSweeperGameState | undefined;
 
-  constructor(private mineService: MinesService, private statsService: StatisticsService, private authService: AuthenticationService) { }
+  constructor(private mineService: MinesService, private statsService: StatisticsService, private authService: AuthenticationService) { 
+  }
 
   ngOnInit(): void {
   }
@@ -49,5 +50,10 @@ export class MinesweeperComponent implements OnInit {
     }
 
     this.mineGameState?.triggerAutoLose();
+  }
+
+  onHelp(): void {
+    // this.helpState.show = !this.helpState.show;
+    // this.helpState.ui = this.helpState.show ? 'X' : '?';
   }
 }

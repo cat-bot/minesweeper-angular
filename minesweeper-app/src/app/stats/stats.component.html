@@ -1,6 +1,6 @@
 <div class='app-container container-sm stats-container'>
     <div class='row'>
-        <div class='col-12 px-0 px-sm-3 mt-2 mt-sm-4' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-4' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-start justify-content-sm-center mb-0 mb-sm-2">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
@@ -34,14 +34,17 @@
                         <td>
                             {{record.pagerankid}}
                         </td>
-                        <td [class.is-current-user]='(authService.userData | async)?.uid == record.uid'>{{record.name}} <span *ngIf='record.pagerankid == 1' class='winner-badge'>★</span></td>
+                        <td [class.is-current-user]='(authService.userData | async)?.uid == record.uid'>
+                            {{record.name}} 
+                            <span *ngIf='record.pagerankid == 1' class="badge rounded-pill bg-success">★</span>
+                        </td>
                         <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
                         <td>{{(record.time / 1000).toFixed(1)}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class='col-12 px-0 px-sm-3 mt-2 mt-sm-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-start justify-content-sm-center  mb-0 mb-sm-2">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
@@ -49,7 +52,6 @@
                     <li [class.disabled]='!statistics || !(statistics?.hasNext)' class="page-item" title="show me the next scores" (click)='getNext()'>
                         <a class="page-link">Next ❯</a></li>
                         &nbsp;
-                    <li class="page-item" title="back to minesweeper"><a routerLink='/' class="page-link"> ❮ &#625; </a></li>
                 </ul>
             </nav>
         </div>
