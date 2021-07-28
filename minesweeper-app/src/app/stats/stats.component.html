@@ -35,8 +35,8 @@
                             {{record.pagerankid}}
                         </td>
                         <td [class.is-current-user]='(authService.userData | async)?.uid == record.uid'>
-                            {{record.name}} 
-                            <span *ngIf='record.pagerankid == 1' class="badge rounded-pill bg-success">★</span>
+                            <span class='name long-form'>{{record.name}}</span><span class='name short-form'>{{record.name | initialsTransform }}</span>  
+                            <span *ngIf='record.pagerankid == 1' class="badge rounded-pill bg-success ms-2">★</span>
                         </td>
                         <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
                         <td>{{(record.time / 1000).toFixed(1)}}</td>

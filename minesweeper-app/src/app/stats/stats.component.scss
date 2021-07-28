@@ -32,6 +32,10 @@
     } 
 
     tr {
+        .name {
+            display: none;
+        }
+
         .is-current-user {
             font-weight: bold;
         }
@@ -48,4 +52,16 @@
             animation: yellow-pulse 2s ease-in 1;
         }
     }
+
+    @media (max-width: 350px) {
+        .short-form {
+            display: inline-block !important; 
+        }
+    }
+
+    @media (min-width: 351px) {
+        .long-form {
+            display: inline-block !important; 
+        }
+    }    
 }

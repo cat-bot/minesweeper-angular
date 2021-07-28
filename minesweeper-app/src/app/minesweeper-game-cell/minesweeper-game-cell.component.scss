@@ -4,6 +4,9 @@
     height: 100%;
     width: 100%;
     border: 1px solid white;
+    font-family: $mono-fonts;
+    font-weight: bold;
+    vertical-align: middle;
 
     &.hidden {
         background-color: $hidden-cell-background;     
@@ -13,22 +16,15 @@
         border-right-color: darken($hidden-cell-background, 30%);
         border-bottom-color: darken($hidden-cell-background, 30%);
 
-        :hover {
+        &:hover {
             background-color: darken($clear-cell-background, 5%);   
         }
 
-        &.marked {
-            font-weight: bold;
-
-            .cell-inner:before {         
-                content: "!";
-            }
+        &.marked  {
+            font-size: 1.2em;
 
             &.incorrect {
-                .cell-inner:before {
-                    color: red;
-                    content: "X";
-                }
+                color: red;
             }
         }
     }
@@ -71,17 +67,6 @@
     &.open-6, &.open-7, &.open-8 {
         color: black;
     }
-     
-    .cell-inner {
-        height: 100%;
-        width: 100%;
-    }
-
-    &.beginner {
-        .cell-inner {
-            padding-top:3px;
-        }
-    }
 
     &.intermediate {
         .cell-inner {
@@ -90,7 +75,6 @@
 
         @media (min-width: 768px) {
             .cell-inner {
-                padding-top:3px;
                 font-size:1em;
             }
         }
@@ -103,7 +87,6 @@
 
         @media (min-width: 768px) {
             .cell-inner {
-                padding-top:3px;
                 font-size:1em;
             }
         }

@@ -75,9 +75,33 @@ export class MineSweeperCell {
     }
 
     getCellGlyph(): string {
-        return this.isRevealed 
-            ? (this.isMine ? "💣" : (this.adjacentMineCount > 0 ? `${this.adjacentMineCount}` : "")) 
-            : "";
+        /* 
+            the possible content states are:
+                hidden (css hidden)
+                marked (css hidden, marked)
+                marked and incorrrect (css hidden, marked, incorrect)
+                revealed adjacent cells (css open-1 ... open-8)
+                revealed and a mine (css mine or mine triggered)
+                revealed and no mine or adjacent mines
+
+        */
+        if (!this.isRevealed) 
+        {
+            if (this.isMarked) {
+                return this.cellIncorrectlyMarked ? "╳" : "!";
+            }
+
+            return "";
+        }
+
+        if (this.isMine) {
+            return "💣";
+        }
+            
+        if (this.adjacentMineCount > 0) 
+            return `${this.adjacentMineCount}`;
+        
+        return "";
     }
 
     getCellClass(): string {
