@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { StatisticsDataPage } from '../interface/StatisticsDataPage';
 import { StatisticsService } from '../statistics.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { ViewportScroller } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { STATISTICS_FILTER_MODES } from '../interface/StatisticsFilterModes';
 
 @Component({
   selector: 'app-stats',
@@ -21,31 +22,48 @@ export class StatsComponent implements OnInit {
   // for scrolling to..
   scrollToId: string | undefined;
 
+  filterValues: string[] = STATISTICS_FILTER_MODES;
+  selectedFilterValue: string; 
+
   constructor(
     private route: ActivatedRoute, 
-    private scroller: ViewportScroller,
     public statisticsService: StatisticsService, 
     public authService: AuthenticationService) { 
     this.pageSize = 10;
     this.currentRecordIndex = 0;
+
+    // default to 'all' filter
+    this.selectedFilterValue = this.filterValues[0];
   }
 
-  ngOnInit(): void {
-    // initialise at time = 0...
-    this.getStats(0);
-  }
+  ngOnInit(): void {  
+    this.route.paramMap.subscribe(p => {
+      let filterValue = p.get('f') || this.filterValues[0];
 
-  ngAfterViewChecked() {
+      // reset the filter
+      if (this.filterValues.indexOf(filterValue) != -1) {
+        this.selectedFilterValue = filterValue;
+      }
+
+      // reset the current paging index
+      this.currentRecordIndex = 0;
+
+      // initialise at time = 0...
+      this.getStats(0);
+    }); 
+    
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
-        this.scroller.scrollToAnchor(fragment);
         this.scrollToId = fragment;
       }
     });
   }
 
   getStats(startAt: number): void {
-    this.statisticsService.getPagedStats(startAt, this.pageSize)
+    // 'all' is a cosmetic nicety, not an actual gametype, so exclude from the query...
+    let queryFilterValue = this.selectedFilterValue === "all" ? "" : this.selectedFilterValue;
+
+    this.statisticsService.getPagedStats(startAt, this.pageSize, queryFilterValue)
       .then((data) => {
         // cosmetic index for display
         data.data.forEach((value) => {
