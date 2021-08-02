@@ -5,7 +5,8 @@ import { MinesweeperComponent } from './minesweeper/minesweeper.component';
 
 const routes: Routes = [
   { path: '', component: MinesweeperComponent },
-  { path: 'stats', component: StatsComponent }
+  { path: 'stats/:f', component: StatsComponent },
+  { path: 'stats', redirectTo: '/stats/all'}
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@
             <a class="ms-nav-link navbar-brand text-white me-3" routerLink="/">
                 <h1 class='d-inline-block'>&#625;<span class='d-none d-sm-inline'>inesweeper</span></h1>
             </a>
-            <a class="ms-nav-link navbar-brand text-white" routerLink="/stats">stats</a>
+            <a class="ms-nav-link navbar-brand text-white" routerLink="/stats/all">stats</a>
         </div>
         <div class='user-ui-container rounded-circle' data-signed-in='false'>
             <div *ngIf='!(authService.userData | async)' id='login-prompt' (click)='onSignIn()' title='sign in' class='rounded-circle navbar-nav d-flex justify-content-center align-items-center'>

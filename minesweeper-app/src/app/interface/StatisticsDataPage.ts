@@ -11,7 +11,9 @@ export class StatisticsDataPage {
     public hasPrev: boolean;
     public hasNext: boolean;
 
-    constructor(data: Score[], hasPrev: boolean, hasNext: boolean, pageSize: number) {
+    public typeFilter: string | undefined;
+
+    constructor(data: Score[], hasPrev: boolean, hasNext: boolean, pageSize: number, typeFilter: string | undefined) {
         this.pageSize = pageSize;
         this.data = data;
 
@@ -20,5 +22,7 @@ export class StatisticsDataPage {
 
         this.startTime = data[0]?.time;
         this.endTime = data[data.length - 1]?.time;
+
+        this.typeFilter = typeFilter;
     }
 }

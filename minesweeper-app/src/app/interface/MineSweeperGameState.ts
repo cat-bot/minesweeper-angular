@@ -141,35 +141,6 @@ export class MineSweeperGameState {
             this.logToConsole(`game stopped: ${this.gameCompletionState}`);
         }
     }  
-
-    public triggerAutoWin() {
-        if (!this.gameIsEnabled)
-            return;
-
-        this.wonByAutoWin = true;
-
-        for(let i = 0; i < this.grid.grid.length; i++) {
-           let innerArray = this.grid.grid[i];
-
-           for(let j = 0; j < innerArray.length; j++) {
-                if (!innerArray[j].isMine)
-                    this.trySelectCell(innerArray[j]);
-           }
-        }
-
-        // manually trigger game is won, unlike autolose - trySelectCell
-        //  wont uncover marked cells. Since some might have been marked,
-        // we wont be able to know the game is won by successful uncovered
-        // cell count alone
-        this.setGameWon();
-    }
-
-    public triggerAutoLose() {
-        if (!this.gameIsEnabled)
-            return;
-            
-        this.trySelectCell(this.grid.mines[0]);
-    }
  
     // PRIVATE
 

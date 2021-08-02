@@ -14,7 +14,7 @@
     <span *ngIf='gameState?.gameCompletionState == NEW || gameState?.gameCompletionState == STARTED'>mines remaining: {{gameState?.cellsRemaining}}</span>
     <span *ngIf='gameState?.gameCompletionState == COMPLETED'>You won! <span>😸</span> Check your score 
         <a *ngIf='gameState?.storedWinRecordId' 
-            routerLink="/stats" 
+            routerLink="/stats/{{gameState?.gridSize?.label}}" 
             fragment='{{gameState?.storedWinRecordId}}'>here</a>
         <span *ngIf='!(gameState?.storedWinRecordId)'>....</span>
     </span>

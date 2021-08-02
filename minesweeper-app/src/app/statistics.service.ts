@@ -11,13 +11,18 @@ export class StatisticsService {
 
   constructor(private angularFireStore: AngularFirestore) { }
 
-  getPagedStats(startTime: number, limit: number) : Promise<StatisticsDataPage> {
+  getPagedStats(startTime: number, limit: number, typeFilter: string | undefined) : Promise<StatisticsDataPage> {
     // fetch 1 more than limit, to test for paging
     let k = limit + 1;
 
-    let query = this.angularFireStore
-      .collection(environment.scores_collection).ref
-      .orderBy("time")
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = typeFilter 
+      ? ref.where("gametype", "==", typeFilter).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
       .startAt(startTime)
       .limit(k)
       .withConverter(new ScoreConverter())
@@ -32,12 +37,12 @@ export class StatisticsService {
           if (hasNext)
               results.pop();
   
-          return new StatisticsDataPage(results, false, hasNext, limit);
+          return new StatisticsDataPage(results, false, hasNext, limit, typeFilter);
       },
       (error) => { 
         // just return a blank result set
         console.log(error);
-        return new StatisticsDataPage([], false, false, 0); 
+        return new StatisticsDataPage([], false, false, 0, typeFilter); 
       });
 
       return query;
@@ -47,9 +52,14 @@ export class StatisticsService {
     // fetch 1 more than limit, to test for paging
     let k = pageCursor.pageSize + 1;
 
-    let query = this.angularFireStore
-      .collection(environment.scores_collection).ref
-      .orderBy("time")
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = pageCursor.typeFilter 
+      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
       .startAfter(pageCursor.endTime)
       .limit(k)
       .withConverter(new ScoreConverter())
@@ -64,12 +74,12 @@ export class StatisticsService {
           if (hasNext)
               results.pop();
 
-          return new StatisticsDataPage(results, true, hasNext, pageCursor.pageSize);
+          return new StatisticsDataPage(results, true, hasNext, pageCursor.pageSize, pageCursor.typeFilter);
       },
       (error) => { 
         // just return a blank result set
         console.log(error);
-        return new StatisticsDataPage([], false, false, 0); 
+        return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
       });
 
       return query;
@@ -79,9 +89,14 @@ export class StatisticsService {
     // fetch 1 more than limit, to test for paging
     let k = pageCursor.pageSize + 1;
 
-    let query = this.angularFireStore
-      .collection(environment.scores_collection).ref
-      .orderBy("time")
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = pageCursor.typeFilter 
+      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
       .endBefore(pageCursor.startTime)
       .limitToLast(k)
       .withConverter(new ScoreConverter())
@@ -96,12 +111,12 @@ export class StatisticsService {
           if (hasPrev)
               results.shift();
 
-          return new StatisticsDataPage(results, hasPrev, true, pageCursor.pageSize);
+          return new StatisticsDataPage(results, hasPrev, true, pageCursor.pageSize, pageCursor.typeFilter);
       },
       (error) => { 
         // just return a blank result set
         console.log(error);
-        return new StatisticsDataPage([], false, false, 0); 
+        return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
       });
 
       return query;
