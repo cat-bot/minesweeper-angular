@@ -1,15 +1,15 @@
 <div class='app-container container-sm stats-container'>
     <div class='row'>
-        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-4 mb-0 mb-sm-2'>
-            <nav aria-label="pagination" class='d-inline-block align-content-center me-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-3 mb-0 mb-sm-2'>
+            <!-- <nav aria-label="pagination" class='d-inline-block align-content-center me-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
                 <ul class="pagination justify-content-start mb-1">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
                         <a class="page-link">❮ Prev</a></li>
                     <li [class.disabled]='!statistics || !(statistics?.hasNext)' class="page-item" title="show me the next scores" (click)='getNext()'>
                         <a class="page-link">Next ❯</a></li>
                 </ul>
-            </nav>
-            <div class='d-flex flex-wrap d-flex justify-content-evenly d-sm-inline-block mt-2 mt-sm-0'>
+            </nav> -->
+            <div class='d-flex flex-wrap justify-content-evenly d-sm-inline-block mt-2 mt-sm-0'>
                 <button *ngFor='let filter of filterValues' type="button" data-bs-toggle="button" autocomplete="off" 
                     class='btn btn-outline-secondary rounded-pill mx-1 mb-1 mb-sm-0 lh-1' [class.active]='filter == selectedFilterValue' 
                     [attr.aria-pressed]='filter == selectedFilterValue' title="filter by '{{filter}}'" routerLink="/stats/{{filter}}">
