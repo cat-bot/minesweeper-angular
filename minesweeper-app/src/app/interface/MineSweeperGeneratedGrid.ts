@@ -15,13 +15,6 @@ export class MineSweeperGeneratedGrid {
     public mines: MineSweeperCell[];
     public gridSize: MineSweeperGridSize;
 
-    public revealAllMines () {
-        for(let i = 0; i < this.mines.length; i++) {
-            if (!this.mines[i].isRevealed)
-                this.mines[i].reveal();
-        }
-    }
-
     public getAdjacentNonMineNonRevealedCells(cell: MineSweeperCell) : MineSweeperCell[] {
         let adjCellIndices = this.generateAdjacentCells(this.gridSize, cell.i, cell.j);
         let adjCells = [];

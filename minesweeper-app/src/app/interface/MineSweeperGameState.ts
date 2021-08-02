@@ -27,6 +27,11 @@ export class MineSweeperGameState {
     totalCellCountRequiredToWin: number;
     cellsCleared: number;
     wonByAutoWin: boolean;
+    storedWinRecordId: string | undefined;
+
+    // for tracking marked cells
+    cellsRemaining: number;
+    allCells: MineSweeperCell[] = [];
 
     constructor(
         gridSize: MineSweeperGridSize, 
@@ -49,7 +54,22 @@ export class MineSweeperGameState {
         // how many cell reveals to win?
         this.totalCellCountRequiredToWin =  gridSize.width*gridSize.height - gridSize.mines;
         this.cellsCleared = 0;
+
+        // how many remain to mark
+        this.cellsRemaining = gridSize.mines;
+
+        // flatten the grid into an array
+        for (let i = 0; i < this.grid.grid.length; i++) {
+            let row = this.grid.grid[i];
+            for (let j = 0; j < row.length; j++) {
+                this.allCells.push(row[j]);
+            }
+        }
     };
+
+    public getMarkedCells() : MineSweeperCell[] {
+        return this.allCells.filter((cell) => { return cell.isMarked });
+    }
 
     // PUBLIC
 
@@ -57,9 +77,14 @@ export class MineSweeperGameState {
         if (this.gameIsEnabled) {   
             // make sure timer is started     
             this.ensureGameStarted(); 
-
             this.logToConsole(`mark cell ${cell.toString()}`);
+
+            // check cell state before and after
             cell.tryMarkCell();
+            let markedCellCount = this.getMarkedCells().length;
+
+            // recalc cellsRemaining
+            this.cellsRemaining = this.gridSize.mines - markedCellCount;
         }
         else {
             this.logToConsole(`game stopped: ${this.gameCompletionState}`);
@@ -71,6 +96,11 @@ export class MineSweeperGameState {
             // make sure timer is started
             this.ensureGameStarted();
             this.logToConsole(`select cell ${cell.toString()}`);
+
+            if (cell.isMarked) {
+                // do nothing - the original minesweeper wouldnt let you select marked cells
+                return;
+            }
             
             // first, check if already revealed
             if (cell.isRevealed) {
@@ -111,29 +141,6 @@ export class MineSweeperGameState {
             this.logToConsole(`game stopped: ${this.gameCompletionState}`);
         }
     }  
-
-    public triggerAutoWin() {
-        if (!this.gameIsEnabled)
-            return;
-
-        this.wonByAutoWin = true;
-
-        for(let i = 0; i < this.grid.grid.length; i++) {
-           let innerArray = this.grid.grid[i];
-
-           for(let j = 0; j < innerArray.length; j++) {
-                if (!innerArray[j].isMine)
-                    this.trySelectCell(innerArray[j]);
-           }
-        }
-    }
-
-    public triggerAutoLose() {
-        if (!this.gameIsEnabled)
-            return;
-            
-        this.trySelectCell(this.grid.mines[0]);
-    }
  
     // PRIVATE
 
@@ -172,13 +179,33 @@ export class MineSweeperGameState {
 
     private setGameLost() : void {
         this.ensureGameStopped(MINESWEEPER_GAME_COMPLETION_STATES.failed);
-        this.grid.revealAllMines();
+        this.revealRelevantCellsOnLoss();
+    }
+
+    private revealRelevantCellsOnLoss() {
+        /*
+            on hitting a mine, the original game would:
+            `   1 - reveal the hit mine, highlighted red (already done by cell.trySelectCell())                     
+        */
+        for(let i = 0; i < this.grid.mines.length; i++) {
+            let mine = this.grid.mines[i];
+            
+            // 2 - reveal other mines that were not marked
+            if (!mine.isRevealed && !mine.isMarked) {
+                mine.reveal();
+            }
+        }
+
+        // 3 - set all marked cells that arent mines to incorrectly flagged
+        let incorrectlyMarkedCells = this.getMarkedCells().filter((cell) => { return !cell.isMine; });
+        incorrectlyMarkedCells.forEach((cell) => { cell.setIsIncorrectlyMarked() });
+
+        // 4 - leave the marked symbol where it was correctly a mine ...
     }
 
     private setGameWon(): void {
         this.ensureGameStopped(MINESWEEPER_GAME_COMPLETION_STATES.completed);
-        this.grid.revealAllMines(); 
-        
+
         if (!this.wonByAutoWin) {
             let user = this.authService.getCurrentUser();
 
@@ -189,8 +216,9 @@ export class MineSweeperGameState {
                     user.uid, 
                     this.gameElapsedTime ? this.gameElapsedTime : NaN);
 
-                this.statsService.addScore(score);
-                this.logToConsole('score submitted');
+                this.statsService.addScore(score).then((doc) => {
+                    this.storedWinRecordId = doc.id;
+                });
             }
         }
     }

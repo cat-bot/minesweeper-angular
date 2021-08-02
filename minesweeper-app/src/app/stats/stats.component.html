@@ -1,7 +1,33 @@
 <div class='app-container container-sm stats-container'>
     <div class='row'>
-        <div class='col-12 p-1 p-sm-3 py-sm-2 g-sm-2'>
-            <table class="table table-striped table-borderless">
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-4 mb-0 mb-sm-4'>
+            <nav aria-label="pagination" class='d-inline-block align-content-center me-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+                <ul class="pagination justify-content-start mb-1">
+                    <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
+                        <a class="page-link">❮ Prev</a></li>
+                    <li [class.disabled]='!statistics || !(statistics?.hasNext)' class="page-item" title="show me the next scores" (click)='getNext()'>
+                        <a class="page-link">Next ❯</a></li>
+                        &nbsp;
+                    <li class="page-item" title="back to minesweeper"><a routerLink='/' class="page-link"> ❮ &#625; </a></li>
+                </ul>
+            </nav>
+            <div class='d-flex flex-wrap d-flex justify-content-evenly d-sm-inline-block mt-2 mt-sm-0'>
+                <button *ngFor='let filter of filterValues' type="button" data-bs-toggle="button" autocomplete="off" 
+                    class='btn btn-outline-secondary rounded-pill mx-1 mb-1 mb-sm-0 lh-1' [class.active]='filter == selectedFilterValue' 
+                    [attr.aria-pressed]='filter == selectedFilterValue' title="filter by '{{filter}}'" routerLink="/stats/{{filter}}">
+                    {{filter}}
+                 </button>
+            </div>
+        </div>
+        <div class='col-12 px-0 px-sm-3 my-5' *ngIf='!statistics'>
+            <div class="d-flex justify-content-center mt-2">
+                <div class="spinner-grow themed-spinner" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class='col-12 px-0 px-sm-3' *ngIf='statistics'>
+            <table class="table table-striped table-borderless mb-0 mb-sm-2" *ngIf='(statistics?.data)?.length'>
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -10,23 +36,32 @@
                         <th scope="col">time (s)</th>
                     </tr>
                 </thead>
-                <tbody class='opacity-animation' *ngIf='statistics' [class.fadeIn]='statistics'>
-                    <tr *ngFor='let record of statistics?.data'>
-                        <td>{{record.uid}}</td>
-                        <td>{{record.name}}</td>
+                <tbody class='opacity-animation' [class.fadeIn]='statistics'>
+                    <tr *ngFor='let record of statistics?.data' id='{{record.docid}}' [class.highlight]='record.docid == scrollToId'>
+                        <td>
+                            {{record.pagerankid}}
+                        </td>
+                        <td [class.is-current-user]='(authService.userData | async)?.uid == record.uid'>
+                            <span class='name long-form'>{{record.name}}</span><span class='name short-form'>{{record.name | initialsTransform }}</span>  
+                            <span *ngIf='record.pagerankid == 1' class="badge rounded-pill bg-success ms-2">★</span>
+                        </td>
                         <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
-                        <td>{{record.time / 1000}}</td>
+                        <td>{{(record.time / 1000).toFixed(1)}}</td>
                     </tr>
                 </tbody>
             </table>
+            <div *ngIf='!(statistics?.data)?.length' class="mx-4 my-2 text-center text-wrap fs-2 font-monospace">
+                    No scores yet. <a routerLink='/'>Be the first!</a>
+            </div>
         </div>
-        <div class='col-12 p-1 p-sm-3 py-sm-2 g-sm-2 content-justify-center' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
-            <nav aria-label="...">
-                <ul class="pagination pagination">
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-2' *ngIf='statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+            <nav aria-label="pagination">
+                <ul class="pagination justify-content-start mb-0 mb-sm-2">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
-                        <a class="page-link" routerLink="/stats">&lt; prev</a></li>
+                        <a class="page-link">❮ Prev</a></li>
                     <li [class.disabled]='!statistics || !(statistics?.hasNext)' class="page-item" title="show me the next scores" (click)='getNext()'>
-                        <a class="page-link" routerLink="/stats">next &gt;</a></li>
+                        <a class="page-link">Next ❯</a></li>
+                        &nbsp;
                 </ul>
             </nav>
         </div>

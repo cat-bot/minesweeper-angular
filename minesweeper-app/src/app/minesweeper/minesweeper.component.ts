@@ -18,10 +18,12 @@ export class MinesweeperComponent implements OnInit {
   selectedGridSize: MineSweeperGridSize = this.availableGridSizes[0];     // default to beginner
   mineGameState: MineSweeperGameState | undefined;
 
-  constructor(private mineService: MinesService, private statsService: StatisticsService, private authService: AuthenticationService) { }
+  markOnSelect: boolean = false;
 
-  ngOnInit(): void {
+  constructor(private mineService: MinesService, private statsService: StatisticsService, private authService: AuthenticationService) { 
   }
+
+  ngOnInit(): void { }
 
   onNewGame(): void {  
     if (!environment.production) {
@@ -35,19 +37,16 @@ export class MinesweeperComponent implements OnInit {
       this.authService);
   }
 
-  onAutoWin(): void {
+  toggleSelectMode(toggle: boolean): void {
     if (!environment.production) {
-      console.log('auto win game');
+      console.log(`changing cell select mode from ${this.markOnSelect} to ${toggle}`);
     }
 
-    this.mineGameState?.triggerAutoWin();
+    this.markOnSelect = toggle;
   }
 
-  onAutoLose(): void {
-    if (!environment.production) {
-      console.log('auto lose game');
-    }
-
-    this.mineGameState?.triggerAutoLose();
+  onHelp(): void {
+    // this.helpState.show = !this.helpState.show;
+    // this.helpState.ui = this.helpState.show ? 'X' : '?';
   }
 }

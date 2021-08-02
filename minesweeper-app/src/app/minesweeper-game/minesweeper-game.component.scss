@@ -18,10 +18,20 @@ table {
 
     &.intermediate {
         .cell {
-            height: $cell-size;
-            width: $cell-size; 
-            min-width: $cell-size;
-            min-height: $cell-size;
+            height: $small-cell-size;
+            width: $small-cell-size; 
+            min-width: $small-cell-size;
+            min-height: $small-cell-size;
+        }
+
+        // scale bigger for tablets and above
+        @media (min-width: 768px) {
+            .cell {
+                height: $large-cell-size;
+                width: $large-cell-size; 
+                min-width: $large-cell-size;
+                min-height: $large-cell-size;
+            }    
         }
     }
 
@@ -32,6 +42,16 @@ table {
             min-width: $small-cell-size;
             min-height: $small-cell-size;
         }
+
+        // scale bigger for tablets and above
+        @media (min-width: 768px) {
+            .cell {
+                height: $large-cell-size;
+                width: $large-cell-size; 
+                min-width: $large-cell-size;
+                min-height: $large-cell-size;
+            }    
+        }
     }
 
     // general  
@@ -39,4 +59,11 @@ table {
         border: 1px solid $grid-border; 
         padding: 0;
     }
+}
+
+.game-state-info {
+    margin: 0 auto;
+    text-align: center;
+    font-family: $mono-fonts;
+    font-size: 1.2em;
 }

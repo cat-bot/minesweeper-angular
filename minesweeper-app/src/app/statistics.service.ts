@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthenticationService } from './authentication.service';
-
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { StatisticsDataPage } from './interface/StatisticsDataPage';
 import { Score, ScoreConverter } from './interface/Score';
@@ -13,49 +11,120 @@ export class StatisticsService {
 
   constructor(private angularFireStore: AngularFirestore) { }
 
-  getScores(startAt: number, n: number) : Promise<undefined | StatisticsDataPage> {
-    // fetch 1 more than n, to test for paging
-    let k = n + 1;
-    let db = this.angularFireStore.collection(environment.scores_collection);
+  getPagedStats(startTime: number, limit: number, typeFilter: string | undefined) : Promise<StatisticsDataPage> {
+    // fetch 1 more than limit, to test for paging
+    let k = limit + 1;
 
-    let result = db.ref
-      .orderBy("time")
-      .startAt(startAt)
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = typeFilter 
+      ? ref.where("gametype", "==", typeFilter).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
+      .startAt(startTime)
       .limit(k)
       .withConverter(new ScoreConverter())
       .get()
       .then((querySnapshot) => { 
           let results: Score[] = [];
+          querySnapshot.forEach((doc) => { results.push(doc.data()); });
 
-          querySnapshot.forEach((doc) => {
-              let index = startAt;
-              let data = doc.data();
-              index++;
-              
-              results.push(data);
-          });
+          let hasNext = results.length > limit;
 
-          let hasPrev = startAt != 0;
-          let hasNext = results.length > n;
-
-          // if the length, exceeds what we wanted to query, there's a next page, so pop the one extra entry
+          // if the result set length exceeds limit, there's a next page, so pop the one extra entry
           if (hasNext)
               results.pop();
   
-          return new StatisticsDataPage(results, startAt, hasPrev, hasPrev ? startAt - n : undefined, hasNext, hasNext ? startAt + n : undefined);
+          return new StatisticsDataPage(results, false, hasNext, limit, typeFilter);
       },
-      () => {
-        return undefined;
+      (error) => { 
+        // just return a blank result set
+        console.log(error);
+        return new StatisticsDataPage([], false, false, 0, typeFilter); 
       });
 
-      return result;
+      return query;
   } 
 
-  addScore(score: Score): void {
-    this.angularFireStore
-      .collection(environment.scores_collection)
-      .add(new ScoreConverter().toFirestore(score))
-      .then(() => {
+  getNextPage(pageCursor: StatisticsDataPage) : Promise<StatisticsDataPage> {
+    // fetch 1 more than limit, to test for paging
+    let k = pageCursor.pageSize + 1;
+
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = pageCursor.typeFilter 
+      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
+      .startAfter(pageCursor.endTime)
+      .limit(k)
+      .withConverter(new ScoreConverter())
+      .get()
+      .then((querySnapshot) => { 
+          let results: Score[] = [];
+          querySnapshot.forEach((doc) => { results.push(doc.data()); });
+
+          let hasNext = results.length > pageCursor.pageSize;
+
+          // if the result set length exceeds limit, there's a next page, so pop the one extra entry
+          if (hasNext)
+              results.pop();
+
+          return new StatisticsDataPage(results, true, hasNext, pageCursor.pageSize, pageCursor.typeFilter);
+      },
+      (error) => { 
+        // just return a blank result set
+        console.log(error);
+        return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
       });
+
+      return query;
+  }
+
+  getPreviousPage(pageCursor: StatisticsDataPage) : Promise<StatisticsDataPage> {
+    // fetch 1 more than limit, to test for paging
+    let k = pageCursor.pageSize + 1;
+
+    let ref = this.angularFireStore
+      .collection(environment.scores_collection).ref;
+
+    let baseQuery = pageCursor.typeFilter 
+      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.orderBy("time");
+
+    let query = baseQuery
+      .endBefore(pageCursor.startTime)
+      .limitToLast(k)
+      .withConverter(new ScoreConverter())
+      .get()
+      .then((querySnapshot) => { 
+          let results: Score[] = [];
+          querySnapshot.forEach((doc) => { results.push(doc.data()); });
+
+          let hasPrev = results.length > pageCursor.pageSize;
+
+          // if the result set length exceeds limit, there's a prev page, so pop the first extra entry
+          if (hasPrev)
+              results.shift();
+
+          return new StatisticsDataPage(results, hasPrev, true, pageCursor.pageSize, pageCursor.typeFilter);
+      },
+      (error) => { 
+        // just return a blank result set
+        console.log(error);
+        return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
+      });
+
+      return query;
+  }
+
+  addScore(score: Score): Promise<DocumentReference<unknown>> {
+    return this.angularFireStore
+      .collection(environment.scores_collection)
+      .add(new ScoreConverter().toFirestore(score));
   }
 }
