@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { StatisticsDataPage } from '../interface/StatisticsDataPage';
 import { StatisticsService } from '../statistics.service';
-import { RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { STATISTICS_FILTER_MODES } from '../interface/StatisticsFilterModes';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-stats',
@@ -25,6 +25,9 @@ export class StatsComponent implements OnInit {
   filterValues: string[] = STATISTICS_FILTER_MODES;
   selectedFilterValue: string; 
 
+  // subs
+  subs: Subscription[] = [];
+
   constructor(
     private route: ActivatedRoute, 
     public statisticsService: StatisticsService, 
@@ -37,7 +40,7 @@ export class StatsComponent implements OnInit {
   }
 
   ngOnInit(): void {  
-    this.route.paramMap.subscribe(p => {
+    this.subs.push(this.route.paramMap.subscribe(p => {
       let filterValue = p.get('f') || this.filterValues[0];
 
       // reset the filter
@@ -50,13 +53,13 @@ export class StatsComponent implements OnInit {
 
       // initialise at time = 0...
       this.getStats(0);
-    }); 
-    
-    this.route.fragment.subscribe(fragment => {
+    })); 
+   
+    this.subs.push(this.route.fragment.subscribe(fragment => {
       if (fragment) {
         this.scrollToId = fragment;
       }
-    });
+    }));
   }
 
   getStats(startAt: number): void {
@@ -107,5 +110,13 @@ export class StatsComponent implements OnInit {
           this.statistics = data;     
         });
     }
+  }
+
+  ngOnDestroy(): void {
+    // dont forget to unsub
+    this.subs.forEach(s => { 
+      console.log('unsubbing' + s);
+      s.unsubscribe()
+    });
   }
 }
