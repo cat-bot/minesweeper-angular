@@ -19,6 +19,7 @@ import { MinesweeperComponent } from './minesweeper/minesweeper.component';
 import { MinesweeperGameComponent } from './minesweeper-game/minesweeper-game.component';
 import { MinesweeperGameCellComponent } from './minesweeper-game-cell/minesweeper-game-cell.component';
 import { InitialsTransformPipe } from './initials-transform.pipe';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { InitialsTransformPipe } from './initials-transform.pipe';
     MinesweeperComponent,
     MinesweeperGameComponent,
     MinesweeperGameCellComponent,
-    InitialsTransformPipe
+    InitialsTransformPipe,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
