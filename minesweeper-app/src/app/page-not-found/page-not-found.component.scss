@@ -1,0 +1,19 @@
+@import "../../variables";
+
+.app-container {
+    max-width: $max-outer-col-width;
+
+    .body-404 {
+        .http-status-code {
+            color: salmon;
+            font-size: 5rem;
+        }
+
+        pre {
+            border: 1px solid #dee2e6;
+            background-color:salmon;
+            border-radius: 2px;
+            color: white;
+        }
+    }
+}

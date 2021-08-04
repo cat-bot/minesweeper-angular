@@ -185,7 +185,7 @@ export class MineSweeperGameState {
     private revealRelevantCellsOnLoss() {
         /*
             on hitting a mine, the original game would:
-            `   1 - reveal the hit mine, highlighted red (already done by cell.trySelectCell())                     
+            1 - reveal the hit mine, highlighted red (already done by cell.trySelectCell())                     
         */
         for(let i = 0; i < this.grid.mines.length; i++) {
             let mine = this.grid.mines[i];
@@ -210,15 +210,8 @@ export class MineSweeperGameState {
             let user = this.authService.getCurrentUser();
 
             if (user) {
-                let score = new Score(
-                    this.gridSize.label, 
-                    user.displayName + "", 
-                    user.uid, 
-                    this.gameElapsedTime ? this.gameElapsedTime : NaN);
-
-                this.statsService.addScore(score).then((doc) => {
-                    this.storedWinRecordId = doc.id;
-                });
+                let score = new Score(this.gridSize.label, user.displayName + "", user.uid, this.gameElapsedTime ? this.gameElapsedTime : NaN);
+                this.statsService.addScore(score).then((doc) => { this.storedWinRecordId = doc.id; });
             }
         }
     }
