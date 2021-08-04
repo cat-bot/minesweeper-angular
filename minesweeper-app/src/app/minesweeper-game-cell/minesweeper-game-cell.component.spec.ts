@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MinesweeperGameCellComponent } from './minesweeper-game-cell.component';
 
 describe('MinesweeperGameCellComponent', () => {
