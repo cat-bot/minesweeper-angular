@@ -4,11 +4,15 @@
     max-width: $max-outer-col-width;
 
     .game-state-controls {
-        .help-control {
-            font-family: $mono-fonts;
-            z-index:1000;
+        .sticky {
+            position: fixed;
+            top: 10;
+            right: 0;
+            width: 100px;
+            margin-top:1em;    
+            z-index: 100;
         }
-    }
+    }    
 }
 
 
