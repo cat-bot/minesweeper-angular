@@ -51,10 +51,8 @@ export class MinesweeperComponent implements OnInit {
 
   addStickyClass(entries: IntersectionObserverEntry[], thing: any): void {
     entries.forEach((s) => {
-      console.log("pre:" + this.toolBarOutOfView);
       // there should only be one
       this.toolBarOutOfView = !s.isIntersecting;
-      console.log("sticky is on:" + this.toolBarOutOfView);
     });
   }
 }
