@@ -2,20 +2,26 @@
     <div class='row'>
         <div class='col-12 px-2 px-sm-3 my-0 my-sm-4'>
             <div class='body-404 p-0 px-sm-4 pb-sm-4 pt-sm-0'>
-                <h1 class='http-status-code text-center py-3'>
+                <h1 class='http-status-code text-center pt-3'>
                     <span class='font-monospace'>&#191;404&#63;</span>
                 </h1>
+                <h2 class='text-center text-muted pb-4'>page not found</h2>
                 <p class='fs-5 text-center mb-0'>Mart - you took a wrong turn... </p>
                 <p class='fs-5 text-center mb-1'>and now you have to deal with this nonsense:</p>
                 <div class='d-flex justify-content-center'>
                     <pre class=' px-4 px-sm-4 my-4 fs-5'>
 <code>
-.http-status-code, pre {{ '{' }}
+.http-status-code {{ '{' }}
     color: salmon;
+{{ '}' }}
+
+pre {{ '{' }}
+    background-color:salmon;
+    color: white;
 {{ '}' }}</code>          
                     </pre>
                 </div>
-                <p class='fs-5 text-center'>
+                <p class='fs-5 text-center mx-4'>
                     Salmon! Try not to deviate next time eh?                
                 </p>
                 <div class='d-flex justify-content-center'>

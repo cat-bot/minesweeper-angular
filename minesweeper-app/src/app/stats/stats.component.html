@@ -1,9 +1,9 @@
 <div class='app-container container-sm stats-container'>
     <div class='row'>
         <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-3 mb-0 mb-sm-2'>
-            <div class='d-flex flex-wrap justify-content-evenly d-sm-inline-block mt-2 mt-sm-0'>
+            <div class='d-flex flex-wrap justify-content-evenly justify-content-sm-start mt-2 mb-1'>
                 <button *ngFor='let filter of filterValues' type="button" data-bs-toggle="button" autocomplete="off" 
-                    class='btn btn-outline-secondary rounded-pill mx-1 mb-1 mb-sm-0 lh-1' [class.active]='filter == selectedFilterValue' 
+                    class='btn btn-outline-secondary rounded-pill mx-1 mb-2 mb-sm-0 lh-1' [class.active]='filter == selectedFilterValue' 
                     [attr.aria-pressed]='filter == selectedFilterValue' title="filter by '{{filter}}'" routerLink="/stats/{{filter}}">
                     {{filter}}
                  </button>
@@ -35,7 +35,7 @@
                             <span class='name long-form'>{{record.name}}</span><span class='name short-form'>{{record.name | initialsTransform }}</span>  
                             <span *ngIf='record.pagerankid == 1' class="badge rounded-pill bg-success ms-2">★</span>
                         </td>
-                        <td><span [innerHTML]="record.gamealias"></span> {{record.gametype}}</td>
+                        <td>{{record.gametype}}</td>
                         <td>{{(record.time / 1000).toFixed(1)}}</td>
                     </tr>
                 </tbody>
