@@ -15,6 +15,7 @@ export class StatsComponent implements OnInit {
 
   pageSize: number;
   statistics: StatisticsDataPage | undefined;
+  loading: boolean = true;
 
   // for tracking a cosmetic index per record
   currentRecordIndex: number;
@@ -63,6 +64,9 @@ export class StatsComponent implements OnInit {
   }
 
   getStats(startAt: number): void {
+
+    this.loading = true;
+
     // 'all' is a cosmetic nicety, not an actual gametype, so exclude from the query...
     let queryFilterValue = this.selectedFilterValue === "all" ? "" : this.selectedFilterValue;
 
@@ -74,12 +78,15 @@ export class StatsComponent implements OnInit {
           value.pagerankid = this.currentRecordIndex;
         }); 
 
+        this.loading = false;
         this.statistics = data;     
       });
   }
 
   getNext(): void {
     if (this.statistics?.hasNext) {
+      this.loading = true;
+
       this.statisticsService.getNextPage(this.statistics)
         .then((data) => {
           // cosmetic index for display
@@ -88,6 +95,7 @@ export class StatsComponent implements OnInit {
             value.pagerankid = this.currentRecordIndex;
           }); 
 
+          this.loading = false;
           this.statistics = data;     
         });
     }
@@ -95,6 +103,9 @@ export class StatsComponent implements OnInit {
 
   getPrev(): void {
     if (this.statistics?.hasPrev) {
+
+      this.loading = true;
+
       // first reset index for the current displayed data size
       this.currentRecordIndex = this.currentRecordIndex - this.statistics.data.length;
 
@@ -107,6 +118,7 @@ export class StatsComponent implements OnInit {
             value.pagerankid = this.currentRecordIndex;
           }); 
 
+          this.loading = false;
           this.statistics = data;     
         });
     }
@@ -114,9 +126,6 @@ export class StatsComponent implements OnInit {
 
   ngOnDestroy(): void {
     // dont forget to unsub
-    this.subs.forEach(s => { 
-      console.log('unsubbing' + s);
-      s.unsubscribe()
-    });
+    this.subs.forEach(s => {  s.unsubscribe(); });
   }
 }
