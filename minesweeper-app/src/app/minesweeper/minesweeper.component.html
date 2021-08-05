@@ -5,9 +5,9 @@
                 <option *ngFor='let opt of availableGridSizes' [ngValue]='opt'>{{opt.label}} ({{opt.width}}x{{opt.height}}, {{opt.mines}} mines)</option>
             </select>
         </div>
-        <div class='col-12 col-sm-8 p-1 p-sm-3 g-sm-2 d-flex game-state-controls'>
+        <div class='col-12 col-sm-8 p-1 p-sm-3 g-sm-2 d-flex game-state-controls justify-content-between'>
             <input type="button" value='new game' class='btn btn-outline-primary me-2' (click)="onNewGame()" />     
-            <div class='btn-group me-2'>
+            <div class='btn-group'>
                 <button type="button" data-bs-toggle="button" autocomplete="off"
                         [class.active]='!markOnSelect' [attr.aria-pressed]='!markOnSelect' title='select cell'
                         class='btn btn-outline-secondary pt-1' (click)='toggleSelectMode(false)'>
