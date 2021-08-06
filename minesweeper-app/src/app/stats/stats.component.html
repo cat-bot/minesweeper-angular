@@ -44,7 +44,7 @@
                     No scores yet. <a routerLink='/'>Be the first!</a>
             </div>
         </div>
-        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-2' *ngIf='!loading && statistics && (statistics?.hasPrev || statistics?.hasNext)'>
+        <div class='col-12 px-1 px-sm-3 mt-2 mt-sm-2 mb-2' *ngIf='!loading && statistics && (statistics?.hasPrev || statistics?.hasNext)'>
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-start mb-0 mb-sm-2">
                     <li [class.disabled]='!statistics || !(statistics?.hasPrev)' class="page-item" title="show me the previous scores" (click)='getPrev()'>
