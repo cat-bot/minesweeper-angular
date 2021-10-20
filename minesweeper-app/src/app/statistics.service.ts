@@ -1,3 +1,4 @@
+import * as firebase from "firebase";
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
@@ -19,8 +20,8 @@ export class StatisticsService {
       .collection(environment.scores_collection).ref;
 
     let baseQuery = typeFilter 
-      ? ref.where("gametype", "==", typeFilter).orderBy("time")
-      : ref.orderBy("time");
+      ? ref.where("time", "!=", 0).where("gametype", "==", typeFilter).orderBy("time")
+      : ref.where("time", "!=", 0).orderBy("time");
 
     let query = baseQuery
       .startAt(startTime)
@@ -41,7 +42,6 @@ export class StatisticsService {
       },
       (error) => { 
         // just return a blank result set
-        console.log(error);
         return new StatisticsDataPage([], false, false, 0, typeFilter); 
       });
 
@@ -56,8 +56,8 @@ export class StatisticsService {
       .collection(environment.scores_collection).ref;
 
     let baseQuery = pageCursor.typeFilter 
-      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
-      : ref.orderBy("time");
+      ? ref.where("time", "!=", 0).where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.where("time", "!=", 0).orderBy("time");
 
     let query = baseQuery
       .startAfter(pageCursor.endTime)
@@ -78,7 +78,6 @@ export class StatisticsService {
       },
       (error) => { 
         // just return a blank result set
-        console.log(error);
         return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
       });
 
@@ -93,8 +92,8 @@ export class StatisticsService {
       .collection(environment.scores_collection).ref;
 
     let baseQuery = pageCursor.typeFilter 
-      ? ref.where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
-      : ref.orderBy("time");
+      ? ref.where("time", "!=", 0).where("gametype", "==", pageCursor.typeFilter ).orderBy("time")
+      : ref.where("time", "!=", 0).orderBy("time");
 
     let query = baseQuery
       .endBefore(pageCursor.startTime)
@@ -115,7 +114,6 @@ export class StatisticsService {
       },
       (error) => { 
         // just return a blank result set
-        console.log(error);
         return new StatisticsDataPage([], false, false, 0, pageCursor.typeFilter); 
       });
 
@@ -126,5 +124,52 @@ export class StatisticsService {
     return this.angularFireStore
       .collection(environment.scores_collection)
       .add(new ScoreConverter().toFirestore(score));
+  }
+
+  deleteScore(recordId: string): Promise<void> {
+    return this.angularFireStore
+      .collection(environment.scores_collection)
+      .doc(recordId)
+      .delete();
+  }
+
+  ensureStartTime(scoreRecord: DocumentReference<unknown>): Promise<void> {
+    return scoreRecord.update({
+      start: firebase.default.firestore.FieldValue.serverTimestamp()
+    })
+  }
+
+  ensureStopTime(recordId: string): Promise<void> {
+    return this.angularFireStore
+      .collection(environment.scores_collection)
+      .doc(recordId)
+      .update({
+        stop: firebase.default.firestore.FieldValue.serverTimestamp()
+      });
+  }
+
+  ensureDuration(recordId: string): Promise<void> {
+    let duration: number;
+
+    return this.angularFireStore
+      .collection(environment.scores_collection)
+      .doc(recordId).ref
+      .withConverter(new ScoreConverter())
+      .get()
+      .then((doc) => { 
+        let score = doc.data();
+        if (score && score.stop && score.start)
+        {
+          duration = score?.stop?.toMillis() - score?.start?.toMillis();
+        }
+      })
+      .then(() => {
+        this.angularFireStore
+          .collection(environment.scores_collection)
+          .doc(recordId)
+          .update({
+            time: duration
+          });
+      });
   }
 }

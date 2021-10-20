@@ -1,4 +1,4 @@
-<table *ngIf='gameState' class='{{gameState?.gridSize?.label}}'>
+<table *ngIf='gameState && gameState?.gameCompletionState != NEW' class='{{gameState?.gridSize?.label}}'>
     <tbody>
         <tr *ngFor='let row of gameState.grid.grid'>
             <td app-minesweeper-game-cell class='cell' 
@@ -10,8 +10,15 @@
         </tr>
     </tbody>
 </table>
+<div class='col-12 px-0 px-sm-3 my-5' *ngIf='gameState?.gameCompletionState == NEW'>
+    <div class="d-flex justify-content-center mt-2">
+        <div class="spinner-grow themed-spinner" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
 <div class='game-state-info mt-2 mt-sm-3 px-3'>
-    <span *ngIf='gameState?.gameCompletionState == NEW || gameState?.gameCompletionState == STARTED'>mines remaining: {{gameState?.cellsRemaining}}</span>
+    <span *ngIf='gameState?.gameCompletionState == STARTED'>mines remaining: {{gameState?.cellsRemaining}}</span>
     <span *ngIf='gameState?.gameCompletionState == COMPLETED'>You won! 😸 
         <span *ngIf='gameState?.storedWinRecordId'>
             Check your score <a routerLink="/stats/{{gameState?.gridSize?.label}}" fragment='{{gameState?.storedWinRecordId}}'>here</a>

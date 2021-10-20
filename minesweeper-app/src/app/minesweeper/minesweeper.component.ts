@@ -37,11 +37,23 @@ export class MinesweeperComponent implements OnInit {
     }    
   }
 
+  ngOnDestroy() : void {
+    // on navigating away, clean up any old game state
+    if (this.mineGameState) {
+      this.mineGameState.cleanUpAnyNonWonGames();
+    }
+  }
+
   toggleSelectMode(toggle: boolean) {
     this.markOnSelect = toggle;
   }
 
   onNewGame(): void {  
+    // first clean up any old game state
+    if (this.mineGameState) {
+      this.mineGameState.cleanUpAnyNonWonGames();
+    }
+
     this.mineGameState = new MineSweeperGameState(
       this.selectedGridSize, 
       this.mineService.generateGameCells(this.selectedGridSize),
