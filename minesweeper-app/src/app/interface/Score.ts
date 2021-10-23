@@ -1,5 +1,3 @@
-import * as firebase from "firebase";
-
 export class Score {
     public game: string;
     public gamealias: string;

@@ -1,4 +1,3 @@
-import * as firebase from "firebase";
 import { environment } from "src/environments/environment";
 import { AuthenticationService } from "../authentication.service";
 import { StatisticsService } from "../statistics.service";
