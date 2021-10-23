@@ -1,5 +1,9 @@
 @import "../../variables";
 
+.themed-spinner {
+    color: $app-theme-accent-colour-semilight;
+}
+
 table {
     border: 2px solid $grid-border;
     border-collapse: collapse;

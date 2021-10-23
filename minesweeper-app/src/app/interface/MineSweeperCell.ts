@@ -37,9 +37,7 @@ export class MineSweeperCell {
         }
     }
 
-    /*
-        Sets the cell as user-marked, if it hasn't already been revealed.
-    */
+    /** Sets the cell as user-marked, if it hasn't already been revealed. */
     tryMarkCell() {
         if (!this.isRevealed && !this.isLosingMine) {
             // not a losing cell, or already revealed, so toggle its marked state
@@ -47,10 +45,8 @@ export class MineSweeperCell {
         }
     }
 
-    /*
-        Returns :
-            true if successful selection.
-            false if hit a mine.
+    /**
+    * @returns True if successful selection. False if hit a mine.
     */
     selectCell() : boolean {
         // first, set revealed (but no need for it to be marked any more)

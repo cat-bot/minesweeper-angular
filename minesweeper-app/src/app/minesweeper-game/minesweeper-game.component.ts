@@ -21,8 +21,7 @@ export class MinesweeperGameComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   onCellSelect(event: any, cell: MineSweeperCell): void {
     if (event.which == 1)

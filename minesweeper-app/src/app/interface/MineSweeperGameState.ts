@@ -18,15 +18,11 @@ export class MineSweeperGameState {
     gameCompletionState: MINESWEEPER_GAME_COMPLETION_STATES;
     gameIsEnabled: boolean;
 
-    // game time
-    gameStartTime: number | undefined;
-    gameEndTime: number | undefined;
-    gameElapsedTime: number | undefined;
-
     // win condition tracking
     totalCellCountRequiredToWin: number;
     cellsCleared: number;
     wonByAutoWin: boolean;
+    gameRecordId: string | undefined;
     storedWinRecordId: string | undefined;
 
     // for tracking marked cells
@@ -65,6 +61,9 @@ export class MineSweeperGameState {
                 this.allCells.push(row[j]);
             }
         }
+
+        // fetch a game token
+        this.ensureGameStarted();
     };
 
     public getMarkedCells() : MineSweeperCell[] {
@@ -75,8 +74,6 @@ export class MineSweeperGameState {
 
     public tryMarkCell(cell: MineSweeperCell): void {
         if (this.gameIsEnabled) {   
-            // make sure timer is started     
-            this.ensureGameStarted(); 
             this.logToConsole(`mark cell ${cell.toString()}`);
 
             // check cell state before and after
@@ -93,8 +90,6 @@ export class MineSweeperGameState {
 
     public trySelectCell(cell: MineSweeperCell) : void {
         if (this.gameIsEnabled) {
-            // make sure timer is started
-            this.ensureGameStarted();
             this.logToConsole(`select cell ${cell.toString()}`);
 
             if (cell.isMarked) {
@@ -119,14 +114,14 @@ export class MineSweeperGameState {
                 // check if player has won
                 if (this.cellsCleared === this.totalCellCountRequiredToWin) {
                     this.setGameWon();
-                    this.logToConsole(`game won in ${this.gameElapsedTime} millis`);
+                    this.logToConsole(`game won`);
                     return;
                 }
             }
             else {
                 // hit a mine, stop the game
                 this.setGameLost();
-                this.logToConsole(`game failed in ${this.gameElapsedTime} millis`);
+                this.logToConsole(`game failed`);
 
                 return;
             }
@@ -141,20 +136,29 @@ export class MineSweeperGameState {
             this.logToConsole(`game stopped: ${this.gameCompletionState}`);
         }
     }  
- 
-    // PRIVATE
 
-    private logToConsole(logMessage: string) {
-        if (!environment.production) {
-            console.log(logMessage);
+    // delete any rgame record that wasnt actually completed and won
+    public cleanUpAnyNonWonGames() : void {
+        // won games should not be deleted, new games dont have a record
+        // only started and failed games need to be cleaned up
+        if (this.gameRecordId && (this.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.started || this.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.failed )) {
+            this.statsService
+                .deleteScore(this.gameRecordId)
+                .then(() => {  
+                    this.logToConsole(`deleted score for record id ${this.gameRecordId}`)
+                    this.gameRecordId = undefined;
+                });
+        }
+        else {
+            this.logToConsole(`no records to clean, game state is: ${this.gameCompletionState}`)
         }
     }
 
-    private ensureGameStarted() {
-        if (this.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.new) {
-            // record millis start time
-            this.gameStartTime = Date.now();
-            this.gameCompletionState = MINESWEEPER_GAME_COMPLETION_STATES.started;
+    // PRIVATE
+    
+    private logToConsole(logMessage: string) {
+        if (!environment.production) {
+            console.log(logMessage);
         }
     }
 
@@ -162,10 +166,6 @@ export class MineSweeperGameState {
         if (this.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.started) {
             this.gameCompletionState = stopState;          
             this.gameIsEnabled = false;
-
-            // record millis end time
-            this.gameEndTime = Date.now();
-            this.gameElapsedTime = this.gameStartTime ? this.gameEndTime - this.gameStartTime : 0;
         }
     }
 
@@ -180,6 +180,7 @@ export class MineSweeperGameState {
     private setGameLost() : void {
         this.ensureGameStopped(MINESWEEPER_GAME_COMPLETION_STATES.failed);
         this.revealRelevantCellsOnLoss();
+        this.cleanUpAnyNonWonGames();
     }
 
     private revealRelevantCellsOnLoss() {
@@ -209,10 +210,51 @@ export class MineSweeperGameState {
         if (!this.wonByAutoWin) {
             let user = this.authService.getCurrentUser();
 
+            // re-check because the user may have logged themselves out between starting the game and completing it...
             if (user) {
-                let score = new Score(this.gridSize.label, user.displayName + "", user.uid, this.gameElapsedTime ? this.gameElapsedTime : NaN);
-                this.statsService.addScore(score).then((doc) => { this.storedWinRecordId = doc.id; });
+                this.statsService.ensureStopTime
+                this.storedWinRecordId = this.gameRecordId;
+
+                if (this.gameRecordId){
+                    this.statsService
+                        .ensureStopTime(this.gameRecordId)
+                        .then(() => {  
+                            if (this.gameRecordId) {
+                                this.statsService.ensureDuration(this.gameRecordId);
+                                this.gameRecordId = undefined;
+                            }
+                        });
+                }
             }
+        }
+    }
+
+    private ensureGameStarted() {
+        if (this.gameCompletionState === MINESWEEPER_GAME_COMPLETION_STATES.new) {
+            this.getNewGameToken();
+        }
+    }
+
+    private getNewGameToken(): void {
+        let user = this.authService.getCurrentUser();
+
+        if (user) {
+            let score = new Score(this.gridSize.label, user.displayName + "", user.uid, 0, undefined, undefined);
+            this.statsService
+                .addScore(score)
+                .then((doc) => 
+                { 
+                    // store the game id
+                    this.gameRecordId = doc.id;
+
+                    // then update with a timestamp
+                    this.statsService
+                        .ensureStartTime(doc)
+                        .then(() => {
+                            this.logToConsole(`game token id: ${this.gameRecordId}`);
+                            this.gameCompletionState = MINESWEEPER_GAME_COMPLETION_STATES.started;
+                        })
+                });
         }
     }
 }
