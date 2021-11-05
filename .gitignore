@@ -6,3 +6,5 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
+minesweeper-app/.firebase/*cache
+minesweeper-app/.firebase/hosting.ZGlzdFxtaW5lc3dlZXBlci1hcHA.cache
